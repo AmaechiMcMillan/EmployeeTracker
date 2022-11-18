@@ -1,42 +1,45 @@
-const mysql = require('mysql2/promise');
-let inquirer = require("inquirer")
+const mysql = require("mysql2/promise");
+let inquirer = require("inquirer");
 
-let connection
+let connection;
 
-initialize()
+initialize();
 main();
 
-
-async function initialize(){
-    connection = await mysql.createConnection({host:'localhost', user: 'root', database: ''})
-
+async function initialize() {
+  connection = await mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "rootroot",
+    database: "employees_db",
+  });
 }
 
-
 async function main() {
-    // get the client
-    // create the connection
-    const responseObject = await inquirer.prompt([ {
-        type: 'input',
-        name: 'first_name',
-        message: "What's your first name",
+  // get the client
+  // create the connection
+  const responseObject = await inquirer.prompt([
+    {
+      type: "input",
+      name: "first_name",
+      message: "What's your first name",
+    },
+    {
+      type: "input",
+      name: "last_name",
+      message: "What's your last name",
+      default() {
+        return "Doe";
       },
-      {
-        type: 'input',
-        name: 'last_name',
-        message: "What's your last name",
-        default() {
-          return 'Doe';
-        },
-      }])
+    },
+  ]);
 
-      console.log(responseObject)
+  console.log(responseObject);
 
-
-    // query database
-    const [rows] = await connection.execute(`SELECT * FROM employees where firstname = ?`,[responseObject.first_name] );
-    console.table(rows);
-
-
-
-  }
+  // query database
+  const [rows] = await connection.execute(
+    `SELECT * FROM employees where firstname = ?`,
+    [responseObject.first_name]
+  );
+  console.table(rows);
+}
